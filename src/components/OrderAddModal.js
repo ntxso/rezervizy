@@ -2,14 +2,21 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { Modal } from "react-bootstrap";
-import { FormGroup, Label, Input, Button, Row, Col } from "reactstrap";
+import {
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  Row,
+  Col,
+  Collapse,
+} from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Form from "react-bootstrap/Form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import moment from "moment";
-import CustomerCard from "./CustomerCard";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+
 import { addOrder, fetchAddOrder } from "../reducers/orderSlice";
 import { setLoading } from "../reducers/generalSlice";
 import CdqAddressInput from "./CdqAdressInput";
@@ -61,7 +68,6 @@ const OrderAddModal = ({ parentDate, show, handleClose }) => {
   const inputAddressRef = useRef(null);
   //const [inputTestRef, setInputRef] = useState(useRef(null));
   //const inputTestRef = useRef(null);
-  const inputPhoneRef = useRef(null);
   let filteredCustomersDto = [];
   if (isFillList) {
     filteredCustomersDto = customerDtoList.filter((cust) =>
@@ -69,19 +75,19 @@ const OrderAddModal = ({ parentDate, show, handleClose }) => {
     );
   }
 
-  const [formData, setFormData] = useState({
-    orderId: 0,
-    customerId: 0,
-    status: 1,
-    deliveryDate: moment(new Date(parentDate)).format("YYYY-MM-DDTHH:mm"),
-    note: "",
-    total: "",
-    terminal: 1,
-    takingDate: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
-    phoneNumber: "",
-    name: "",
-    address: "",
-  });
+  const [formData, setFormData] = useState({});
+  //   orderId: 0,
+  //   customerId: 0,
+  //   status: 1,
+  //   deliveryDate: moment(new Date(parentDate)).format("YYYY-MM-DDTHH:mm"),
+  //   note: "",
+  //   total: "",
+  //   terminal: 1,
+  //   takingDate: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+  //   phoneNumber: "",
+  //   name: "",
+  //   address: "",
+  // });
 
   const resetModal = () => {
     setDate(parentDate);
@@ -105,6 +111,12 @@ const OrderAddModal = ({ parentDate, show, handleClose }) => {
       address: "",
     }));
   };
+
+  useEffect(() => {
+    if (show) {
+      resetModal();
+    }
+  }, [show]);
 
   useEffect(() => {
     const newDatetime = moment(`${date}T${time}`);
@@ -136,22 +148,23 @@ const OrderAddModal = ({ parentDate, show, handleClose }) => {
   }, [searchTerm, filteredCustomersDto]);
 
   useEffect(() => {
-    if (inputAddressRef.current) {
-      inputAddressRef.current.disabled = selectedCustomerDto !== null;
-    }
-    if (inputNameRef.current) {
-      inputNameRef.current.disabled = selectedCustomerDto !== null;
-    }
     if (showInputs) {
       if (selectedCustomerDto) {
+        console.log("burassdfa");
+        if (inputNameRef.current && inputAddressRef.current) {
+          inputNameRef.current.disabled = true;
+          inputAddressRef.current.disabled = true;
+          console.log("adr:" + inputAddressRef.current.disabled);
+        }
         setFormData((prevData) => ({
           ...prevData,
           name: selectedCustomerDto.name,
           address: selectedCustomerDto.address,
           customerId: selectedCustomerDto.customerId,
         }));
-
-        inputClockRef.current.focus();
+        if (inputClockRef.current) {
+          inputClockRef.current.focus();
+        }
       } else {
         setFormData((prevData) => ({
           ...prevData,
@@ -159,10 +172,17 @@ const OrderAddModal = ({ parentDate, show, handleClose }) => {
           address: "",
           customerId: 0,
         }));
-        inputNameRef.current.focus();
+        if (inputNameRef.current && inputAddressRef.current) {
+          inputNameRef.current.disabled = false;
+          inputAddressRef.current.disabled = false;
+          console.log("adr:" + inputAddressRef.current.disabled);
+        }
+        if (inputNameRef.current) {
+          inputNameRef.current.focus();
+        }
       }
     }
-  }, [showInputs, selectedCustomerDto]);
+  }, [showInputs, selectedCustomerDto, inputAddressRef, inputNameRef]);
 
   const handlePhoneChange = (e) => {
     //setShowSuggestions(true);
@@ -338,7 +358,6 @@ const OrderAddModal = ({ parentDate, show, handleClose }) => {
               name="phoneNumber"
               onChange={handlePhoneChange}
               onBlur={handleOnBlur}
-              innerRef={inputPhoneRef}
             />
           </FormGroup>
 
@@ -385,76 +404,77 @@ const OrderAddModal = ({ parentDate, show, handleClose }) => {
           )}
 
           {/* <AutocompleteDene suggestions={filteredNumbers}/> */}
-          {showInputs && (
-            <>
-              <FormGroup>
-                <Label for="name">İsim</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  id="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  innerRef={inputNameRef}
-                />
-              </FormGroup>
-              {formData.customerId ? (
-                <FormGroup>
-                  <Label for="address">Adres</Label>
-                  <Input
-                    type="textarea"
-                    name="address"
-                    id="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    innerRef={inputAddressRef}
-                  />
-                </FormGroup>
-              ) : (
-                <CdqAddressInput address={lastCustomerDto} />
-              )}
+          <Collapse isOpen={showInputs}>
+            <FormGroup>
+              <Label for="name">İsim</Label>
+              <Input
+                type="text"
+                name="name"
+                id="name"
+                value={formData.name}
+                onChange={handleChange}
+                innerRef={inputNameRef}
+              />
+            </FormGroup>
+          </Collapse>
+          <Collapse isOpen={showInputs && formData.customerId}>
+            <FormGroup>
+              <Label for="address">Adres</Label>
+              <Input
+                type="textarea"
+                name="address"
+                id="address"
+                value={formData.address}
+                onChange={handleChange}
+                innerRef={inputAddressRef}
+              />
+            </FormGroup>
+          </Collapse>
+          <Collapse isOpen={showInputs && !formData.customerId}>
+            <CdqAddressInput address={lastCustomerDto} />
+          </Collapse>
+          <Collapse isOpen={showInputs}>
+            <FormGroup>
+              <Label for="time">Saat</Label>
+              <Input
+                type="time"
+                name="time"
+                id="time"
+                value={time}
+                onChange={handleTimeChange}
+                innerRef={inputClockRef}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="note">Not</Label>
+              <Input
+                type="textarea"
+                name="note"
+                id="note"
+                value={formData.note}
+                onChange={handleChange}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="total">Tutar</Label>
+              <Input
+                type="number"
+                name="total"
+                id="total"
+                value={formData.total}
+                onChange={handleChange}
+              />
+            </FormGroup>
 
-              <FormGroup>
-                <Label for="time">Saat</Label>
-                <Input
-                  type="time"
-                  name="time"
-                  id="time"
-                  value={time}
-                  onChange={handleTimeChange}
-                  innerRef={inputClockRef}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="note">Not</Label>
-                <Input
-                  type="textarea"
-                  name="note"
-                  id="note"
-                  value={formData.note}
-                  onChange={handleChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="total">Tutar</Label>
-                <Input
-                  type="number"
-                  name="total"
-                  id="total"
-                  value={formData.total}
-                  onChange={handleChange}
-                />
-              </FormGroup>
-            </>
-          )}
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button color="primary" type="submit">
-              Kaydet
-            </Button>
-            <Button variant="secondary" onClick={handleClose}>
-              Kapat
-            </Button>
-          </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Button color="primary" type="submit">
+                Kaydet
+              </Button>
+              <Button variant="secondary" onClick={handleClose}>
+                Kapat
+              </Button>
+            </div>
+          </Collapse>
         </Form>
       </Modal.Body>
       <Modal.Footer></Modal.Footer>
