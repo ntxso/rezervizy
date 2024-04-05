@@ -11,6 +11,7 @@ import moment from "moment";
 import OrderDay from "./OrderDay";
 import { fetchCustomers } from "../reducers/customerSlice";
 import { Col, Row } from "react-bootstrap";
+import DistrictName from "./DistrictName";
 
 function CalendarModul() {
   const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
@@ -43,7 +44,7 @@ function CalendarModul() {
     const fetchData = async () => {
       try {
         dispatch(setLoading(true));
-        
+
         //await dispatch(fetchCustomers());
         await dispatch(
           fetchOrdersTwoDate({ one: tempStrDate1, two: tempStrDate2 })
@@ -69,13 +70,32 @@ function CalendarModul() {
       });
 
       if (matchingOrders.length > 0) {
+        let className = "nt-level1-back bg-gradient nt-box-shadow"; // Varsayılan sınıf
+
+        if (matchingOrders.length === 2) {
+          className = "nt-level2-back bg-gradient nt-box-shadow"; // 2 eleman varsa bu sınıfı kullan
+        } else if (matchingOrders.length >= 3) {
+          className = "nt-level3-back bg-gradient nt-box-shadow"; // 3 veya daha fazla eleman varsa bu sınıfı kullan
+        }
         return (
-          <div>
+          <div
+            className={className}
+            style={{ height: "60px" }}
+          >
             {matchingOrders.map((item) => (
-              <div key={item.orderId} className="ms-order-background-level2">
-                <span>{item.deliveryDate.split("T")[1].slice(0, 5)}</span>
+              <div key={item.orderId} className="nt-text-box">
+                <span className="nt-red-color me-1">{item.deliveryDate.split("T")[1].slice(0, 5)}</span>
+                <span> <DistrictName customerId={item.customerId}></DistrictName> </span>
               </div>
             ))}
+          </div>
+        );
+      } else {
+        return (
+          <div
+            style={{ height: "55px",width:"60px", textAlign: "center", marginTop: "5px" }}
+          >
+            {" "}
           </div>
         );
       }
@@ -85,7 +105,7 @@ function CalendarModul() {
 
   useEffect(() => {
     // startDate veya endDate değiştiğinde çalışacak useEffect
-   
+
     if (startDate && endDate) {
       const fetchData = async () => {
         try {
