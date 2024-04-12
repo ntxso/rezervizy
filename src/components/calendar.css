@@ -3,23 +3,25 @@
 }
 .nt-text-box{
   line-height: normal;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  box-shadow: rgba(0, 0, 0, 0.446) 0px 1px 2px 0px;
   overflow: hidden;
   font-size: x-small;
   display: flex;
-  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 .nt-red-color{
   color:#7A0C0C;
 }
 .nt-level1-back{
-  background-color: #d5ebf6;
+  background-color: #D5EBF6;
 }
 .nt-level2-back{
-  background-color: #2d9bd2;
+  background-color: #2D9BD2;
+  color:#050a2a;
 }
 .nt-level3-back{
-  background-color: #164e69;
+  background-color: #164E69;
+  color:#e8e8e8;
 }
 .ms-order-background-level1{
   background-color: aquamarine;
@@ -198,7 +200,7 @@ abbr[title] {
 }
 
 .react-calendar__month-view__days__day--weekend {
-  color: #d10000;
+  /* color: #d10000; */
 }
 
 .react-calendar__month-view__days__day--neighboringMonth,

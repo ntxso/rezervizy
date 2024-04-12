@@ -80,11 +80,11 @@ function CalendarModul() {
         return (
           <div
             className={className}
-            style={{ height: "60px" }}
+            style={{ height: "65px" }}
           >
             {matchingOrders.map((item) => (
               <div key={item.orderId} className="nt-text-box">
-                <span className="nt-red-color me-1">{item.deliveryDate.split("T")[1].slice(0, 5)}</span>
+                <span className="me-1">{item.deliveryDate.split("T")[1].slice(0, 5)}</span>
                 <span> <DistrictName customerId={item.customerId}></DistrictName> </span>
               </div>
             ))}
