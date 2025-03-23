@@ -53,13 +53,13 @@ function TopMenu() {
   const loginAdmin = () => {
     const login = { email: "niyazi", password: "138181" };
     axios
-      .post("https://temizpro.com/api/auth/login", login)
+      .post("https://api.tekrem.com/api/auth/login", login)
       .then((response) => {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
         axios
           .get(
-            "https://temizpro.com/api/user/getuserbyidentityname?identityname=niyazi"
+            "https://api.tekrem.com/api/user/getuserbyidentityname?identityname=niyazi"
           )
           .then((resp) => {
             console.log("TTT:" + JSON.stringify(resp.data));

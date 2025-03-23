@@ -37,7 +37,7 @@ function App() {
         </div>
       ) : (
         <div>
-          Giriş yapılması gerekir
+          Giriş yapılması gerekir.
           <Routes>
             <Route path="/login" element={<Login />} />
           </Routes>

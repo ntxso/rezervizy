@@ -84,7 +84,7 @@ function CustomerAndOrder({ custId, order }) {
                 <FontAwesomeIcon
                   className="text-info me-1"
                   icon={faLocationDot}
-                />
+                />CC
               </span>
               <span className="fs-6">{fullAddress}</span>
             </Link>

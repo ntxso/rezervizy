@@ -12,7 +12,7 @@ const DistrictName = ({ customerId }) => {
       try {
         let resp = await dispatch(fetchGetAddress(customerId));
         let test = districts.find((obj) => obj.id === resp.payload.districtId);
-        console.log("dists:" + JSON.stringify(test));
+        //console.log("dists:" + JSON.stringify(test));
         if (test) {
           setDistName(test.name);
         }

@@ -15,7 +15,7 @@ export const fetchDistricts = createAsyncThunk(
   "cdq/fetchDistricts",
   async (id) => {
     const response = await axiosInstance.get(
-      "cdq/getdistricts?districtid=" + id
+      "cdq/getdistricts?cityid=" + id
     );
     return response.data;
   }
@@ -24,7 +24,7 @@ export const fetchDistricts = createAsyncThunk(
 export const fetchQuarters = createAsyncThunk(
   "cdq/fetchQuarters",
   async (id) => {
-    const response = await axiosInstance.get("cdq/getquarters?quarterid=" + id);
+    const response = await axiosInstance.get("cdq/getquarters?districtId=" + id);
     return response.data;
   }
 );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, FormGroup, Label, Input, Button, ModalFooter } from "reactstrap";
 import * as constants from "../constants/constants";
+import { setLoading } from "../reducers/generalSlice";
 import {
   fetchCities,
   fetchDistricts,
@@ -17,7 +18,6 @@ import {
   fetchAddressUpdate,
   fetchFullAddressByAddress,
 } from "../reducers/customerSlice";
-import { setLoading } from "../reducers/generalSlice";
 
 const CdqAddressInput = ({ address }) => {
   const dispatch = useDispatch();
@@ -30,26 +30,33 @@ const CdqAddressInput = ({ address }) => {
   const inputQuarter = useSelector((state) => state.cdqReducer.inputQuarter);
   const inputAddress = useSelector((state) => state.cdqReducer.inputAddress);
 
-  const [loadingModalOpen, setLoadingModalOpen] = useState(false);
-
   useEffect(() => {
     //setAddressData(address);
     // setSelectedDistrict(address.districtId);
     // setSelectedQuarter(address.quarterId);
-    setLoadingModalOpen(true);
-    dispatch(setInputCity(address?.cityId||34));
-    dispatch(setInputDistrict(address?.districtId||422));
-    dispatch(setInputQuarter(address?.quarterId||32378));
-    dispatch(setInputAddress(""));
+    const fetchInitialize = async () => {
+      try {
+        dispatch(setLoading(true));
+        dispatch(setInputCity(address?.cityId || 34));
+        dispatch(setInputDistrict(address?.districtId || 422));
+        dispatch(setInputQuarter(address?.quarterId || 32378));
+        dispatch(setInputAddress(""));
 
-    dispatch(fetchCities());
-    dispatch(fetchDistricts(address?.cityId || 34));
-    dispatch(fetchQuarters(address?.districtId || 422));
-    setLoadingModalOpen(false);
+        dispatch(fetchCities());
+        dispatch(fetchDistricts(address?.cityId || 34));
+        dispatch(fetchQuarters(address?.districtId || 422));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+    fetchInitialize();
   }, [dispatch, address]);
 
   const handleCityChange = async (e) => {
-    setLoadingModalOpen(true);
+    //setLoadingModalOpen(true);
+    dispatch(setLoading(true));
 
     console.log("İLL:" + e.target.value);
     dispatch(setInputCity(e.target.value));
@@ -62,17 +69,20 @@ const CdqAddressInput = ({ address }) => {
         dispatch(setInputQuarter(quarts.payload[0].id));
       }
     }
-    setLoadingModalOpen(false);
+    //setLoadingModalOpen(false);
+    dispatch(setLoading(false));
   };
   const handleDistrictChange = async (e) => {
-    setLoadingModalOpen(true);
+    //setLoadingModalOpen(true);
+    dispatch(setLoading(true));
     console.log("İLÇE:" + e.target.value);
     dispatch(setInputDistrict(e.target.value));
     const quars = await dispatch(fetchQuarters(e.target.value));
     if (quars.payload[0]) {
       dispatch(setInputQuarter(quars.payload[0].id));
     }
-    setLoadingModalOpen(false);
+    //setLoadingModalOpen(false);
+    dispatch(setLoading(false));
   };
 
   const handleQuarterChange = async (e) => {
@@ -89,12 +99,12 @@ const CdqAddressInput = ({ address }) => {
 
   return (
     <div>
-      <Modal isOpen={loadingModalOpen}>
+      {/* <Modal isOpen={loadingModalOpen}>
         <ModalHeader>Yükleniyor</ModalHeader>
         <ModalBody>
           <Spinner color="primary" />
         </ModalBody>
-      </Modal>
+      </Modal> */}
       <FormGroup>
         <Label for="city">Şehir</Label>
         <Input

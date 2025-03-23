@@ -271,7 +271,7 @@ const CustomerAdd = ({ isOpen, toggle }) => {
       <Modal isOpen={isOpen} toggle={toggle}>
         <Form onSubmit={handleSubmit}>
           <ModalHeader toggle={toggle}>
-            Müşteri Bul/Ekle {JSON.stringify(submittedData)}
+            Müşteri Bul/Ekle
           </ModalHeader>
           <ModalBody>
             {submittedData ? (

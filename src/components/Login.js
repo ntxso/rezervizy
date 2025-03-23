@@ -19,13 +19,13 @@ const Login = () => {
     console.log("Şifre:", password);
     const login = { email:email, password: password };
     axios
-      .post("https://temizpro.com/api/auth/login", login)
+      .post("https://api.tekrem.com/api/auth/login", login)
       .then((response) => {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
         axios
           .get(
-            "https://temizpro.com/api/user/getuserbyidentityname?identityname="+email
+            "https://api.tekrem.com/api/user/getuserbyidentityname?identityname="+email
           )
           .then((resp) => {
             console.log("TTT:" + JSON.stringify(resp.data));

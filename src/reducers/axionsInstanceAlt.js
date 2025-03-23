@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://temizpro.com/api',
+  //baseURL: 'https://api.tekrem.com/api',
+  baseURL: 'https://localhost:44381/api',
   headers: {
     'Content-Type': 'application/json',
   },
